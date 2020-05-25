@@ -127,5 +127,4 @@ app.get('/platform', (req, res) => {
 
 });
 
-app.listen(port, () => console.log(`Web Analyzer API is working on ${port}!`))
-
+app.listen(process.env.PORT || 3000, () => console.log(`Web Analyzer API is working on ${port}!`))
