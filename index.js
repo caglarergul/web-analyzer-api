@@ -60,7 +60,7 @@ checkScriptsToIdentifyPlatform = (html) => {
 }
 
 
-app.get('/platform', (req, res) => {
+app.post('/platform', (req, res) => {
     console.log("URL:", req.body.url)
     rp({
         url: req.body.url,
@@ -77,20 +77,29 @@ app.get('/platform', (req, res) => {
             if (item.includes("cdn.shopify.com")) {
                 //console.log("storefront is found");
                 isItShopify = true;
+                isItUnKnownPlatform = false;
                 thePlatformObject.website.platform = "Shopify";
             } else if (item.includes(".bigcommerce.com")) {
                 //console.log("storefront is found");
                 isItBigCommerce = true;
+                isItUnKnownPlatform = false;
                 thePlatformObject.website.platform = "Bigcommerce";
             } else if (item.includes("vspfiles")) {
                 //console.log("storefront is found");
                 isItVolusion = true;
+                isItUnKnownPlatform = false;
                 thePlatformObject.website.platform = "Volusion";
             } else {
-                isItShopify = false;
-                isItBigCommerce = false;
-                isItVolusion = false;
-                isItUnKnownPlatform = true;
+                if (isItShopify || isItBigCommerce ||  isItVolusion) {
+                    isItUnKnownPlatform = false;
+                }else {
+                    isItShopify = false;
+                    isItBigCommerce = false;
+                    isItVolusion = false;
+                    isItUnKnownPlatform = true;
+                }
+
+                
             }
         });
     }).then(() => {
