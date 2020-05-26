@@ -98,17 +98,16 @@ app.post('/platform', (req, res) => {
                 res.json(thePlatformObject);
             }
         });
-if (!isPlatformRecognized && !wordpressIsFound) {
-    let scriptTags = checkScriptsToIdentifyPlatform(html);
-    return scriptTags;
-}else {
-    return false
-}
-        
+        if (!isPlatformRecognized && !wordpressIsFound) {
+            let scriptTags = checkScriptsToIdentifyPlatform(html);
+            return scriptTags;
+        } else {
+            return false
+        }
+
     }).then((data) => {
         if (data) {
             data.map((item) => {
-
                 if (isPlatformRecognized === false) {
                     if (item.includes("cdn.shopify.com")) {
                         isPlatformRecognized = true;
@@ -116,7 +115,7 @@ if (!isPlatformRecognized && !wordpressIsFound) {
                         thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
                         console.log("This website is Shopify");
                         res.json(thePlatformObject);
-                    } else if (item.includes(".bigcommerce.com")) {
+                    } else if (String(item.match(/bigcommerce/gi)) === "bigcommerce") {
                         console.log("This website is Bigcommerce");
                         isPlatformRecognized = true;
                         thePlatformObject.website.platform = "Bigcommerce";
@@ -128,30 +127,32 @@ if (!isPlatformRecognized && !wordpressIsFound) {
                         thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
                         console.log("This website is Volusion");
                         res.json(thePlatformObject);
-                    } else {
-                        isPlatformRecognized = true;
-                        thePlatformObject.website.platform = "Standalone Application";
-                        thePlatformObject.website.platform_icon = "/platform_icons/standalone-icon.png";
-                        console.log("This website is Standalone Application");
-                        res.json(thePlatformObject);
                     }
                 }
             });
-        }else {
+        } else {
             console.log("skipped!")
         }
+    })
+        .then(() => {
+            if (thePlatformObject.website.platform === null) {
+                isPlatformRecognized = true;
+                thePlatformObject.website.platform = "Standalone Application";
+                thePlatformObject.website.platform_icon = "/platform_icons/standalone-icon.png";
+                console.log("This website is Standalone Application");
+                res.json(thePlatformObject);
+            }
+        })
 
-
-
-    }).catch(function (err) {
-        //handle error
-        if (err.statusCode === 403) {
-            res.json({error: {status_code : 403, message: "The website is unreachacble or using cloudflare firewall."}});
-        }else {
-            res.json({error: {message: err}});
-        }
-        console.log(err.statusCode)
-    });
+        .catch(function (err) {
+            //handle error
+            if (err.statusCode === 403) {
+                res.json({ error: { status_code: 403, message: "The website is unreachacble or using cloudflare firewall." } });
+            } else {
+                res.json({ error: { message: err } });
+            }
+            console.log(err.statusCode)
+        });
 
 });
 
