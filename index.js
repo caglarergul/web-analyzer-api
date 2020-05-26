@@ -67,110 +67,159 @@ checkEcommercePlatformOfWebsite = (htmlContent) => {
     let LINK_TAG_SIZE = $('link', htmlContent).length;
     let SCRIPT_TAG_SIZE = $('script', htmlContent).length;
 
-
-
-    if (thePlatformName === null) {
-        for (let i = 0; i < LINK_TAG_SIZE; i++) {
-            // console.log($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi));
-            // console.log($('link', htmlContent)[i].attribs.href)
-            if ($('link', htmlContent)[i].attribs.href !== undefined) {
-                if ($('link', htmlContent)[i].attribs.href.match(/shopify/gi) !== null) {
-                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/shopify/gi))) {
-                        thePlatformName = "Shopify"
-                        thePlatformObject.website.platform = "Shopify";
-                        thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
-                        console.log("This website is Shopify");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi)[0])
-                    } else {
-                        thePlatformName = "Shopify"
-                        thePlatformObject.website.platform = "Shopify";
-                        thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
-                        console.log("This website is Shopify");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi))
-                    }
-                } else if ($('link', htmlContent)[i].attribs.href.match(/bigcommerce/gi) !== null) {
-
-                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/bigcommerce/gi))) {
-                        thePlatformName = "Bigcommerce"
-                        thePlatformObject.website.platform = "Bigcommerce";
-                        thePlatformObject.website.platform_icon = "/platform_icons/bigcommerce-icon.png";
-                        console.log("This website is Bigcommerce");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi)[0])
-                    } else {
-                        thePlatformName = "Bigcommerce"
-                        thePlatformObject.website.platform = "Bigcommerce";
-                        thePlatformObject.website.platform_icon = "/platform_icons/bigcommerce-icon.png";
-                        console.log("This website is Bigcommerce");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi))
-                    }
+    
+    if ($('script[type="text/x-magento-init"]', htmlContent).length > 0) {
+        
+        thePlatformName = "Magento"
+        thePlatformObject.website.platform = "Magento";
+        thePlatformObject.website.platform_icon = "/platform_icons/magento-icon.png";
+        console.log("This website is Magento");
+    }
+    else if($('meta[name="generator"]', htmlContent).length > 0) {
+       
+        for (let i = 0; i < $('meta[name="generator"]', htmlContent).length; i++) {
+            if ($('meta[name="generator"]', htmlContent)[i].attribs.content.match(/woocommerce/gi) !== null) {
+                if (Array.isArray($('meta[name="generator"]', htmlContent)[i].attribs.content.match(/woocommerce/gi))) {
+                    thePlatformName = "Woocommerce"
+                    thePlatformObject.website.platform = "Woocommerce";
+                    thePlatformObject.website.platform_icon = "/platform_icons/woocommerce-icon.png";
+                    console.log("This website is Woocommerce");
+                    break;
+                    // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi)[0])
+                } else {
+                    thePlatformName = "Woocommerce"
+                    thePlatformObject.website.platform = "Woocommerce";
+                    thePlatformObject.website.platform_icon = "/platform_icons/woocommerce-icon.png";
+                    console.log("This website is Woocommerce");
+                    break;
+                    // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi))
                 }
-                else if ($('link', htmlContent)[i].attribs.href.match(/woocommerce/gi) !== null) {
-
-                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))) {
-                        thePlatformName = "Woocommerce"
-                        thePlatformObject.website.platform = "Woocommerce";
-                        thePlatformObject.website.platform_icon = "/platform_icons/woocommerce-icon.png";
-                        console.log("This website is Woocommerce");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
-                    } else {
-                        thePlatformName = "Woocommerce"
-                        thePlatformObject.website.platform = "Woocommerce";
-                        thePlatformObject.website.platform_icon = "/platform_icons/woocommerce-icon.png";
-                        console.log("This website is Woocommerce");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
-                    }
-                } else if ($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi) !== null) {
-
-                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi))) {
-                        thePlatformName = "Volusion"
-                        thePlatformObject.website.platform = "Volusion";
-                        thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
-                        console.log("This website is volusion");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
-                    } else {
-                        thePlatformName = "Volusion"
-                        thePlatformObject.website.platform = "Volusion";
-                        thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
-                        console.log("This website is volusion");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
-                    }
-                }else if ($('link', htmlContent)[i].attribs.href.match(/vcart=/gi) !== null) {
-
-                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/vcart=/gi))) {
-                        thePlatformName = "3dCart"
-                        thePlatformObject.website.platform = "3dCart";
-                        thePlatformObject.website.platform_icon = "/platform_icons/3dcart-icon.png";
-                        console.log("This website is 3dCart");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
-                    } else {
-                        thePlatformName = "3dCart"
-                        thePlatformObject.website.platform = "3dCart";
-                        thePlatformObject.website.platform_icon = "/platform_icons/3dcart-icon.png";
-                        console.log("This website is 3dCart");
-                        break;
-                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
-                    }
+            }else if ($('meta[name="generator"]', htmlContent)[i].attribs.content.match(/wix/gi) !== null) {
+                if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/wix/gi))) {
+                    thePlatformName = "Wix"
+                    thePlatformObject.website.platform = "Wix";
+                    thePlatformObject.website.platform_icon = "/platform_icons/wix-icon.png";
+                    console.log("This website is Wix");
+                    break;
+                    // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
+                } else {
+                    thePlatformName = "Wix"
+                    thePlatformObject.website.platform = "Wix";
+                    thePlatformObject.website.platform_icon = "/platform_icons/wix-icon.png";
+                    console.log("This website is Wix");
+                    break;
+                    // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
                 }
             }
         }
-
-        if (thePlatformName === null) {
-            thePlatformName = "Standalone"
-            thePlatformObject.website.platform = "Standalone Application";
-            thePlatformObject.website.platform_icon = "/platform_icons/standalone-icon.png";
-            console.log("This website is Standalone Application");
-        }
-
     }
+    else {
+        
+        if (thePlatformName === null) {
+            for (let i = 0; i < LINK_TAG_SIZE; i++) {
+                // console.log($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi));
+                
+                if ($('link', htmlContent)[i].attribs.href !== undefined) {
+                    if ($('link', htmlContent)[i].attribs.href.match(/shopify/gi) !== null) {
+                        if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/shopify/gi))) {
+                            thePlatformName = "Shopify"
+                            thePlatformObject.website.platform = "Shopify";
+                            thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
+                            console.log("This website is Shopify");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi)[0])
+                        } else {
+                            thePlatformName = "Shopify"
+                            thePlatformObject.website.platform = "Shopify";
+                            thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
+                            console.log("This website is Shopify");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi))
+                        }
+                    } else if ($('link', htmlContent)[i].attribs.href.match(/bigcommerce/gi) !== null) {
+    
+                        if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/bigcommerce/gi))) {
+                            thePlatformName = "Bigcommerce"
+                            thePlatformObject.website.platform = "Bigcommerce";
+                            thePlatformObject.website.platform_icon = "/platform_icons/bigcommerce-icon.png";
+                            console.log("This website is Bigcommerce");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi)[0])
+                        } else {
+                            thePlatformName = "Bigcommerce"
+                            thePlatformObject.website.platform = "Bigcommerce";
+                            thePlatformObject.website.platform_icon = "/platform_icons/bigcommerce-icon.png";
+                            console.log("This website is Bigcommerce");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi))
+                        }
+                    }
+                    else if ($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi) !== null) {
+    
+                        if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi))) {
+                            thePlatformName = "Volusion"
+                            thePlatformObject.website.platform = "Volusion";
+                            thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
+                            console.log("This website is volusion");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
+                        } else {
+                            thePlatformName = "Volusion"
+                            thePlatformObject.website.platform = "Volusion";
+                            thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
+                            console.log("This website is volusion");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
+                        }
+                    }else if ($('link', htmlContent)[i].attribs.href.match(/vcart=/gi) !== null) {
+    
+                        if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/vcart=/gi))) {
+                            thePlatformName = "3dCart"
+                            thePlatformObject.website.platform = "3dCart";
+                            thePlatformObject.website.platform_icon = "/platform_icons/3dcart-icon.png";
+                            console.log("This website is 3dCart");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
+                        } else {
+                            thePlatformName = "3dCart"
+                            thePlatformObject.website.platform = "3dCart";
+                            thePlatformObject.website.platform_icon = "/platform_icons/3dcart-icon.png";
+                            console.log("This website is 3dCart");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
+                        }
+                    }else if ($('link', htmlContent)[i].attribs.href.match(/skin\/frontend\/+/g) !== null) {
+    
+                        if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/skin\/frontend\/+/g))) {
+                            thePlatformName = "Magento"
+                            thePlatformObject.website.platform = "Magento";
+                            thePlatformObject.website.platform_icon = "/platform_icons/magento-icon.png";
+                            console.log("This website is Magento");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
+                        } else {
+                            thePlatformName = "Magento"
+                            thePlatformObject.website.platform = "Magento";
+                            thePlatformObject.website.platform_icon = "/platform_icons/magento-icon.png";
+                            console.log("This website is Magento");
+                            break;
+                            // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
+                        }
+                    }
+                    
+                }
+            }
+    
+            if (thePlatformName === null) {
+                thePlatformName = "Standalone"
+                thePlatformObject.website.platform = "Standalone Application";
+                thePlatformObject.website.platform_icon = "/platform_icons/standalone-icon.png";
+                console.log("This website is Standalone Application");
+            }
+            
+        }
+    }
+
 
 }
 
