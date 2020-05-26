@@ -44,17 +44,117 @@ checkGoogleAnalytics = (html) => {
 }
 
 checkWooCommerceMetaContent = (html) => {
-    let metaTagLength = $('meta', html).length;
+    let metaTagLength = $('meta[name="generator"]', html).length;
 
     const metaContent = [];
     for (let i = 0; i < metaTagLength; i++) {
         //req.json($('script', html).json());
-        if ($('meta', html)[i].attribs.content !== undefined) {
-            metaContent.push($('meta', html)[i].attribs.content);
-            // console.log(metaContent);
+        if ($('meta[name="generator"]', html)[i].attribs.content !== undefined) {
+            metaContent.push($('meta[name="generator"]', html)[i].attribs.content);
+            console.log(metaContent);
         }
     }
     return metaContent;
+}
+let thePlatformName = null;
+
+checkEcommercePlatformOfWebsite = (htmlContent) => {
+    // For Shopify, Bigcommerce, WooCommerce, Volusion Platforms Check Link tag
+    // For  Platform Check head > script tag
+    thePlatformName = null;
+    thePlatformObject.website.platform = null;
+    thePlatformObject.website.platform_icon = null;
+    let LINK_TAG_SIZE = $('link', htmlContent).length;
+    let SCRIPT_TAG_SIZE = $('script', htmlContent).length;
+
+
+
+    if (thePlatformName === null) {
+        for (let i = 0; i < LINK_TAG_SIZE; i++) {
+            // console.log($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi));
+            // console.log($('link', htmlContent)[i].attribs.href)
+            if ($('link', htmlContent)[i].attribs.href !== undefined) {
+                if ($('link', htmlContent)[i].attribs.href.match(/shopify/gi) !== null) {
+                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/shopify/gi))) {
+                        thePlatformName = "Shopify"
+                        thePlatformObject.website.platform = "Shopify";
+                        thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
+                        console.log("This website is Shopify");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi)[0])
+                    } else {
+                        thePlatformName = "Shopify"
+                        thePlatformObject.website.platform = "Shopify";
+                        thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
+                        console.log("This website is Shopify");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi))
+                    }
+                } else if ($('link', htmlContent)[i].attribs.href.match(/bigcommerce/gi) !== null) {
+
+                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/bigcommerce/gi))) {
+                        thePlatformName = "Bigcommerce"
+                        thePlatformObject.website.platform = "Bigcommerce";
+                        thePlatformObject.website.platform_icon = "/platform_icons/bigcommerce-icon.png";
+                        console.log("This website is Bigcommerce");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi)[0])
+                    } else {
+                        thePlatformName = "Bigcommerce"
+                        thePlatformObject.website.platform = "Bigcommerce";
+                        thePlatformObject.website.platform_icon = "/platform_icons/bigcommerce-icon.png";
+                        console.log("This website is Bigcommerce");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/shopify/gi))
+                    }
+                }
+                else if ($('link', htmlContent)[i].attribs.href.match(/woocommerce/gi) !== null) {
+
+                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))) {
+                        thePlatformName = "Woocommerce"
+                        thePlatformObject.website.platform = "Woocommerce";
+                        thePlatformObject.website.platform_icon = "/platform_icons/woocommerce-icon.png";
+                        console.log("This website is Woocommerce");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
+                    } else {
+                        thePlatformName = "Woocommerce"
+                        thePlatformObject.website.platform = "Woocommerce";
+                        thePlatformObject.website.platform_icon = "/platform_icons/woocommerce-icon.png";
+                        console.log("This website is Woocommerce");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
+                    }
+                } else if ($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi) !== null) {
+
+                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match('\/a\/c\/default\.css+/gi'))) {
+                        thePlatformName = "Volusion"
+                        thePlatformObject.website.platform = "Volusion";
+                        thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
+                        console.log("This website is volusion");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
+                    } else {
+                        thePlatformName = "Volusion"
+                        thePlatformObject.website.platform = "Volusion";
+                        thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
+                        console.log("This website is volusion");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
+                    }
+                }
+            }
+        }
+
+        if (thePlatformName === null) {
+            thePlatformName = "Standalone"
+            thePlatformObject.website.platform = "Standalone Application";
+            thePlatformObject.website.platform_icon = "/platform_icons/standalone-icon.png";
+            console.log("This website is Standalone Application");
+        }
+
+    }
+
 }
 
 checkScriptsToIdentifyPlatform = (html) => {
@@ -73,9 +173,6 @@ checkScriptsToIdentifyPlatform = (html) => {
 
 
 app.post('/platform', (req, res) => {
-    let isPlatformRecognized = false;
-    let isItUnKnownPlatform = false;
-    let wordpressIsFound = false;
     console.log("URL:", req.body.url);
 
     rp({
@@ -87,72 +184,18 @@ app.post('/platform', (req, res) => {
         thePlatformObject.website.url = req.body.url;
         checkFacebookPixel(html);
         checkGoogleAnalytics(html);
-        let wooCommerceMeta = checkWooCommerceMetaContent(html);
-        wooCommerceMeta.map((item) => {
-            if (String(item.match(/woocommerce/gi)) === "WooCommerce") {
-                isPlatformRecognized = true;
-                wordpressIsFound = true;
-                thePlatformObject.website.platform = "WooCommerce";
-                thePlatformObject.website.platform_icon = "/platform_icons/woocommerce-icon.png";
-                console.log("This website is WooCommerce");
-                res.json(thePlatformObject);
-            }
-        });
-        if (!isPlatformRecognized && !wordpressIsFound) {
-            let scriptTags = checkScriptsToIdentifyPlatform(html);
-            return scriptTags;
+        checkEcommercePlatformOfWebsite(html);
+    }).then(() => {
+        res.json(thePlatformObject);
+    }).catch(function (err) {
+        //handle error
+        if (err.statusCode === 403) {
+            res.json({ error: { status_code: 403, message: "The website is unreachacble or using cloudflare firewall." } });
         } else {
-            return false
+            res.json({ error: err });
         }
-
-    }).then((data) => {
-        if (data) {
-            data.map((item) => {
-                if (isPlatformRecognized === false) {
-                    if (item.includes("cdn.shopify.com")) {
-                        isPlatformRecognized = true;
-                        thePlatformObject.website.platform = "Shopify";
-                        thePlatformObject.website.platform_icon = "/platform_icons/shopify-icon.png";
-                        console.log("This website is Shopify");
-                        res.json(thePlatformObject);
-                    } else if (String(item.match(/bigcommerce/gi)) === "bigcommerce") {
-                        console.log("This website is Bigcommerce");
-                        isPlatformRecognized = true;
-                        thePlatformObject.website.platform = "Bigcommerce";
-                        thePlatformObject.website.platform_icon = "/platform_icons/bigcommerce-icon.png";
-                        res.json(thePlatformObject);
-                    } else if (item.includes("vspfiles")) {
-                        isPlatformRecognized = true;
-                        thePlatformObject.website.platform = "Volusion";
-                        thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
-                        console.log("This website is Volusion");
-                        res.json(thePlatformObject);
-                    }
-                }
-            });
-        } else {
-            console.log("skipped!")
-        }
-    })
-        .then(() => {
-            if (thePlatformObject.website.platform === null) {
-                isPlatformRecognized = true;
-                thePlatformObject.website.platform = "Standalone Application";
-                thePlatformObject.website.platform_icon = "/platform_icons/standalone-icon.png";
-                console.log("This website is Standalone Application");
-                res.json(thePlatformObject);
-            }
-        })
-
-        .catch(function (err) {
-            //handle error
-            if (err.statusCode === 403) {
-                res.json({ error: { status_code: 403, message: "The website is unreachacble or using cloudflare firewall." } });
-            } else {
-                res.json({ error: { message: err } });
-            }
-            console.log(err.statusCode)
-        });
+        console.log(err.statusCode)
+    });
 
 });
 
