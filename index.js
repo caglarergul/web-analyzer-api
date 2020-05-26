@@ -127,7 +127,7 @@ checkEcommercePlatformOfWebsite = (htmlContent) => {
                     }
                 } else if ($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi) !== null) {
 
-                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match('\/a\/c\/default\.css+/gi'))) {
+                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/a\/c\/default\.css+/gi))) {
                         thePlatformName = "Volusion"
                         thePlatformObject.website.platform = "Volusion";
                         thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
@@ -139,6 +139,23 @@ checkEcommercePlatformOfWebsite = (htmlContent) => {
                         thePlatformObject.website.platform = "Volusion";
                         thePlatformObject.website.platform_icon = "/platform_icons/volusion-icon.png";
                         console.log("This website is volusion");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
+                    }
+                }else if ($('link', htmlContent)[i].attribs.href.match(/vcart=/gi) !== null) {
+
+                    if (Array.isArray($('link', htmlContent)[i].attribs.href.match(/vcart=/gi))) {
+                        thePlatformName = "3dCart"
+                        thePlatformObject.website.platform = "3dCart";
+                        thePlatformObject.website.platform_icon = "/platform_icons/3dcart-icon.png";
+                        console.log("This website is 3dCart");
+                        break;
+                        // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi)[0])
+                    } else {
+                        thePlatformName = "3dCart"
+                        thePlatformObject.website.platform = "3dCart";
+                        thePlatformObject.website.platform_icon = "/platform_icons/3dcart-icon.png";
+                        console.log("This website is 3dCart");
                         break;
                         // console.log( $('link', htmlContent)[i].attribs.href.match(/woocommerce/gi))
                     }
